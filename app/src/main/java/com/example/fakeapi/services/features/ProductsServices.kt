@@ -1,28 +1,65 @@
-package com.example.appretrofit.services.features
+package com.example.fakeapi.services.features
 
 import androidx.lifecycle.viewModelScope
-import com.example.appretrofit.services.endpoints.ProductsEndpoints
-import com.example.appretrofit.services.models.Product
+import com.example.fakeapi.services.endpoints.ProductsEndpoints
+import com.example.fakeapi.services.models.Product
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.Retrofit
 
-class ProductsServices: BaseService() {
+class ProductsServices(private val retrofit: Retrofit) : BaseService() {
+
+    private val productsEndpoints = retrofit.create(ProductsEndpoints::class.java)
 
     fun getAllProducts(
-        success: (list:List<Product>) -> Unit,
-        error: (data:String)->Unit
-    ){
+        success: (List<Product>) -> Unit,
+        error: (String) -> Unit
+    ) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                val resp = getRetrofit().create(ProductsEndpoints::class.java)
+                val products = getRetrofit()
+                    .create(ProductsEndpoints::class.java)
                     .getAllProducts()
-                when(val data = resp.body()){
-                    null -> success(emptyList())
-                    else -> success(data)
-                }
-            } catch (e: Exception){
-                error("Error al consumir el servicio de productos")
+                success(products)
+            } catch (e: Exception) {
+                error("Network error: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun getProductById(
+        id: Int,
+        success: (Product) -> Unit,
+        error: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                val product = getRetrofit()
+                    .create(ProductsEndpoints::class.java)
+                    .getProductById(id)
+                success(product)
+            } catch (e: Exception) {
+                error("Network error: ${e.localizedMessage}")
+            }
+        }
+    }
+
+    fun getProductBySlug(
+        slug: String,
+        success: (Product) -> Unit,
+        error: (String) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                val product = getRetrofit()
+                    .create(ProductsEndpoints::class.java)
+                    .getProductBySlug(slug)
+                success(product)
+            } catch (e: Exception) {
+                error("Network error: ${e.localizedMessage}")
             }
         }
     }
 }
+

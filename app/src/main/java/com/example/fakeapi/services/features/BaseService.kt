@@ -1,16 +1,14 @@
-package com.example.appretrofit.services.features
+package com.example.fakeapi.services.features
 
 import androidx.lifecycle.ViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-abstract class BaseService: ViewModel() {
-    private val domainUrl:String = "https://fakestoreapi.com"
+abstract class BaseService : ViewModel() {
+    private val domainUrl: String = "https://api.escuelajs.co/api/v1/"
 
-    public fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(this.domainUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+    fun getRetrofit(): Retrofit = Retrofit.Builder()
+        .baseUrl(domainUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 }

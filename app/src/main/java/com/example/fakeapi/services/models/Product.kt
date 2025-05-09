@@ -1,11 +1,16 @@
-package com.example.appretrofit.services.models
+package com.example.fakeapi.services.models
 
 data class Product(
-    var id: Int,
-    var title: String,
-    var price: Double,
-    var description: String,
-    var category: String,
-    var image: String,
-    var rating: Ranting
+    val id: Int,
+    val title: String,
+    val price: Int,
+    val description: String,
+    val category: Category,
+    val images: List<String>
+)
+
+data class Category(
+    val id: Int,
+    val name: String,
+    val image: String
 )
